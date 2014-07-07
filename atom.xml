@@ -4,7 +4,7 @@
   <title><![CDATA[Cascy Jarvis]]></title>
   <link href="http://CascyJarvis.github.com/atom.xml" rel="self"/>
   <link href="http://CascyJarvis.github.com/"/>
-  <updated>2014-07-07T18:25:33+08:00</updated>
+  <updated>2014-07-07T18:32:34+08:00</updated>
   <id>http://CascyJarvis.github.com/</id>
   <author>
     <name><![CDATA[Cascy Jarvis]]></name>
@@ -14,13 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[First_post]]></title>
-    <link href="http://CascyJarvis.github.com/blog/2014/04/21/first_post/"/>
-    <updated>2014-04-21T00:00:00+08:00</updated>
-    <id>http://CascyJarvis.github.com/blog/2014/04/21/first_post</id>
-    <content type="html"><![CDATA[<h2>iOS7中自定义UITextField的Placeholder属性</h2>
-
-<p>通过重写UITextField中的<strong>drawPlaceholderInRect</strong>方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。 <br/>
+    <title type="html"><![CDATA[iOS7中自定义UITextField的Placeholder属性]]></title>
+    <link href="http://CascyJarvis.github.com/blog/2014/04/21/ios7zhong-zi-ding-yi-uitextfieldde-placeholdershu-xing/"/>
+    <updated>2014-04-21T18:30:38+08:00</updated>
+    <id>http://CascyJarvis.github.com/blog/2014/04/21/ios7zhong-zi-ding-yi-uitextfieldde-placeholdershu-xing</id>
+    <content type="html"><![CDATA[<p>通过重写UITextField中的<strong>drawPlaceholderInRect</strong>方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。 <br/>
 1.  创建继承自UITextField的类CustomTextField<br/>
 2.  在CustomTextField中重写<strong>drawPlaceholderInRect</strong>方法，代码如下</p>
 
