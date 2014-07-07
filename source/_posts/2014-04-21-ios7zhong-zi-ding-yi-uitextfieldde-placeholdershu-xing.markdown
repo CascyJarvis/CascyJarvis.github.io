@@ -1,5 +1,11 @@
-iOS7中自定义UITextField的Placeholder属性
--------
+---
+layout: post
+title: "iOS7中自定义UITextField的Placeholder属性"
+date: 2014-04-21 18:30:38 +0800
+comments: true
+categories: 
+---
+
 通过重写UITextField中的__drawPlaceholderInRect__方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。   
 1.  创建继承自UITextField的类CustomTextField  
 2.  在CustomTextField中重写__drawPlaceholderInRect__方法，代码如下
