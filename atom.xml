@@ -4,7 +4,7 @@
   <title><![CDATA[Cascy Jarvis]]></title>
   <link href="http://CascyJarvis.github.com/atom.xml" rel="self"/>
   <link href="http://CascyJarvis.github.com/"/>
-  <updated>2014-07-07T18:22:34+08:00</updated>
+  <updated>2014-07-07T18:24:33+08:00</updated>
   <id>http://CascyJarvis.github.com/</id>
   <author>
     <name><![CDATA[Cascy Jarvis]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Post First_post]]></title>
-    <link href="http://CascyJarvis.github.com/blog/2014/04/21/post-first_post/"/>
+    <title type="html"><![CDATA[First_post]]></title>
+    <link href="http://CascyJarvis.github.com/blog/2014/04/21/first_post/"/>
     <updated>2014-04-21T00:00:00+08:00</updated>
-    <id>http://CascyJarvis.github.com/blog/2014/04/21/post-first_post</id>
+    <id>http://CascyJarvis.github.com/blog/2014/04/21/first_post</id>
     <content type="html"><![CDATA[<h2>iOS7中自定义UITextField的Placeholder属性</h2>
 
 <p>通过重写UITextField中的<strong>drawPlaceholderInRect</strong>方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。 <br/>
