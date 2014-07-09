@@ -9,8 +9,8 @@
   <meta name="author" content="Cascy Jarvis">
 
   
-  <meta name="description" content="通过重写UITextField中的drawPlaceholderInRect方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。 1. 创建继承自UITextField的类CustomTextField
-2. &hellip;">
+  <meta name="description" content="Octopress是利用Jekyll博客引擎开发的一个博客系统，可以将生成的静态页面在github page上进行很好的展现。号称是hacker专属的一个博客系统(A blogging framework for hackers.)
+搭建Octopress需要读者熟悉一些shell命令， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,155 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/starting-with-octopress/">Starting With Octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-09T12:24:38+08:00" pubdate data-updated="true">Jul 9<sup>th</sup>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://octopress.org/">Octopress</a>是利用<a href="https://github.com/jekyll/jekyll">Jekyll</a>博客引擎开发的一个博客系统，可以将生成的静态页面在github page上进行很好的展现。号称是hacker专属的一个博客系统(A blogging framework for hackers.)
+搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。</p>
+
+<h2><a href="http://octopress.org/docs/">官方文档</a></h2>
+
+<h4>安装Ruby</h4>
+
+<p>Mac系统自带有Ruby环境，无需特别的安装即可使用，如果没有Ruby环境，可以参考<a href="http://octopress.org/docs/setup/rvm/">Installing Ruby With RVM</a>进行安装</p>
+
+<ul>
+<li>安装RVM</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl -L https://get.rvm.io | bash -s stable --ruby</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装Ruby 1.9.3</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rvm install 1.9.3
+</span><span class='line'>rvm use 1.9.3
+</span><span class='line'>rvm rubygems latest</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成上面的操作之后，运行<code>ruby --version</code>应该可以看到ruby 1.9.3环境已经安装好了。</p>
+
+<hr />
+
+<h4>安装Octopress</h4>
+
+<ul>
+<li>将Octopress源码从GitHub上clone下来</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/imathis/octopress.git octopress    # 从github clone octopress的源代码，后面的octopress是本地存放文件夹的名称，可以自定
+</span><span class='line'>cd octopress</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装依赖</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install bundler
+</span><span class='line'>rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
+</span><span class='line'>bundle install</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h4>博客部署</h4>
+
+<ul>
+<li>创建一个user_name.github.com（或者user_name.github.io）的repo（必须使用此种命名方式），GitHub会需要几分钟的时间为你生成显示的页面，在部署完成后，我们就可以在user_name.github.com（或user_name.github.io）的页面上看到我们的博客信息了。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake setup_github_pages # 和github创建关联
+</span><span class='line'>git@github.com:your_username/your_username.github.com.git   # 按提示输入github URL
+</span><span class='line'>rake generate # 把你所有编辑的内容生成你的Blog静态页面
+</span><span class='line'>rake deploy   # &lt;span class="goog_qs-tidbit goog_qs-tidbit-0"&gt;如果检查没有任何问题就可以 push 你的 blog 到 github master branch&lt;/span&gt; 
+</span><span class='line'>＃ 状态检查
+</span><span class='line'>cd ~/octopress
+</span><span class='line'>git status   # 应该显示 On branch source
+</span><span class='line'>cd _deploy/  # 应该显示 On branch master
+</span><span class='line'>＃ 最后提交到source branch
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m 'first commit'
+</span><span class='line'>git push origin source # 如果这一步出错，请再次检查仓库名称是否按要求命名，同时检查Admin面板下Default Branch是否</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>最终生成的包括Octopress的所有源码以及资源代码放到了source分支下，而_deploy目录下生成的静态页面则放到了master分支下</p></blockquote>
+
+<hr />
+
+<h4>撰写博客</h4>
+
+<p>撰写博客主要会使用到以下几个命令：</p>
+
+<ul>
+<li><code>rake new_post[‘article name’]</code>生成博客模板文件，文件位置在source/_posts/目录下，修改相应文件即可</li>
+<li><code>rake generate</code>生成静态页面，页面放在_deploy目录下</li>
+<li><code>rake watch</code> 检测文件变化，实时生成新内容</li>
+<li><code>rake preview</code> 在本机生成预览页面，ctrl+c可退出预览状态，预览页面可在&lt;localhost:4000>浏览</li>
+<li><code>rake deploy</code> 将生成的静态页面部署到git服务器</li>
+</ul>
+
+
+<p>博客的页面是使用markdown语法进行书写的，网上关于markdown的教程很多，推荐使用<a href="http://mouapp.com/">Mou</a>进行博客的编写。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -149,6 +298,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/09/starting-with-octopress/">Starting With Octopress</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/21/ios7zhong-zi-ding-yi-uitextfieldde-placeholdershu-xing/">iOS7中自定义UITextField的Placeholder属性</a>
