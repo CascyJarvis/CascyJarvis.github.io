@@ -4,7 +4,7 @@
   <title><![CDATA[Cascy Jarvis]]></title>
   <link href="http://CascyJarvis.github.io/atom.xml" rel="self"/>
   <link href="http://CascyJarvis.github.io/"/>
-  <updated>2014-07-10T12:06:34+08:00</updated>
+  <updated>2014-07-10T12:12:31+08:00</updated>
   <id>http://CascyJarvis.github.io/</id>
   <author>
     <name><![CDATA[Cascy Jarvis]]></name>
@@ -22,7 +22,8 @@
 搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。
 <a href="http://octopress.org/docs/">官方文档</a></p>
 
-<p>&lt;!-more-></p>
+<!--more-->
+
 
 <hr />
 
