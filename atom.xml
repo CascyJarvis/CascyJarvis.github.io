@@ -4,7 +4,7 @@
   <title><![CDATA[Cascy Jarvis]]></title>
   <link href="http://CascyJarvis.github.io/atom.xml" rel="self"/>
   <link href="http://CascyJarvis.github.io/"/>
-  <updated>2014-07-09T12:39:47+08:00</updated>
+  <updated>2014-07-10T12:06:34+08:00</updated>
   <id>http://CascyJarvis.github.io/</id>
   <author>
     <name><![CDATA[Cascy Jarvis]]></name>
@@ -19,9 +19,12 @@
     <updated>2014-07-09T12:24:38+08:00</updated>
     <id>http://CascyJarvis.github.io/blog/2014/07/09/starting-with-octopress</id>
     <content type="html"><![CDATA[<p><a href="http://octopress.org/">Octopress</a>是利用<a href="https://github.com/jekyll/jekyll">Jekyll</a>博客引擎开发的一个博客系统，可以将生成的静态页面在github page上进行很好的展现。号称是hacker专属的一个博客系统(A blogging framework for hackers.)
-搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。</p>
+搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。
+<a href="http://octopress.org/docs/">官方文档</a></p>
 
-<h2><a href="http://octopress.org/docs/">官方文档</a></h2>
+<p>&lt;!-more-></p>
+
+<hr />
 
 <h4>安装Ruby</h4>
 
