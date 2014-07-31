@@ -4,7 +4,7 @@
   <title><![CDATA[Cascy Jarvis]]></title>
   <link href="http://CascyJarvis.github.io/atom.xml" rel="self"/>
   <link href="http://CascyJarvis.github.io/"/>
-  <updated>2014-07-10T12:12:31+08:00</updated>
+  <updated>2014-07-31T17:21:46+08:00</updated>
   <id>http://CascyJarvis.github.io/</id>
   <author>
     <name><![CDATA[Cascy Jarvis]]></name>
@@ -12,6 +12,272 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[IOS实用代码整理——UIImage&amp;UIColor部分]]></title>
+    <link href="http://CascyJarvis.github.io/blog/2014/07/31/iosshi-yong-dai-ma-zheng-li-uiimage-and-uicolorbu-fen/"/>
+    <updated>2014-07-31T17:18:00+08:00</updated>
+    <id>http://CascyJarvis.github.io/blog/2014/07/31/iosshi-yong-dai-ma-zheng-li-uiimage-and-uicolorbu-fen</id>
+    <content type="html"><![CDATA[<h3>UIImage</h3>
+
+<h4>UIImage常用宏</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//读取本地图片
+</span><span class='line'>#define LOADIMAGE(file,ext) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]pathForResource:file ofType:ext]]
+</span><span class='line'>//定义UIImage对象
+</span><span class='line'>#define IMAGE(A) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:A ofType:nil]]
+</span><span class='line'>//定义UIImage对象
+</span><span class='line'>#define ImageNamed(_pointer) [UIImage imageNamed:[UIUtil imageName:_pointer]]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>UIImage的本地存取</h4>
+
+<ul>
+<li>将图片保存至本地</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void) saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
+</span><span class='line'>    if ([[extension lowercaseString] isEqualToString:@"png"]) {
+</span><span class='line'>        [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
+</span><span class='line'>    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
+</span><span class='line'>        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
+</span><span class='line'>    } else {
+</span><span class='line'>        //ALog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
+</span><span class='line'>        NSLog(@"文件后缀不认识");
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>从指定路径读取图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIImage *) loadImage:(NSString *)fileName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
+</span><span class='line'>    UIImage * result = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.%@", directoryPath, fileName, extension]];
+</span><span class='line'>    return result;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>将图片保存到默认文档路径</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    NSLog(@"保存路径:%@",documentsDirectoryPath);
+</span><span class='line'>    [self saveImage:image withFileName:imageName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>从默认文档路径读取图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIImage *) loadImage:(NSString *)fileName ofType:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    
+</span><span class='line'>    //Load Image From Directory
+</span><span class='line'>    UIImage * image = [self loadImage:fileName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>    
+</span><span class='line'>    return image;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>判断指定图片是否存在</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (BOOL)imageIsExistInDirectoryWithImageName:(NSString *)imageName type:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    
+</span><span class='line'>    //Load Image From Directory
+</span><span class='line'>    UIImage * image = [self loadImage:imageName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>    
+</span><span class='line'>    if (imageFromWeb == nil) {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }else{
+</span><span class='line'>        return YES;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>删除图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (BOOL)deleteImageWithImageName:(NSString *)imageName type:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    NSString * imagePath = [NSString stringWithFormat:@"%@/%@.%@", documentsDirectoryPath, imageName, extension];
+</span><span class='line'>    
+</span><span class='line'>    NSFileManager *fileManager = [NSFileManager defaultManager];
+</span><span class='line'>    NSError *error;
+</span><span class='line'>    BOOL success = [fileManager removeItemAtPath:imagePath error:&error];
+</span><span class='line'>    if (success) {
+</span><span class='line'>        return YES;
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h3>UIColor</h3>
+
+<h4>取色宏</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//获取RGBA颜色
+</span><span class='line'>#define RGBA(r, g, b, a)    [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+</span><span class='line'>//获取RGB颜色
+</span><span class='line'>#define RGB(r,g,b)          RGBA(r,g,b,1.0f)</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>随机取色</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (UIColor *)randomColor {
+</span><span class='line'>    static BOOL seeded = NO;
+</span><span class='line'>    if (!seeded) {
+</span><span class='line'>        seeded = YES;
+</span><span class='line'>        (time(NULL));
+</span><span class='line'>    }
+</span><span class='line'>    CGFloat red = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    CGFloat green = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    CGFloat blue = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    return [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>16位颜色值</h4>
+
+<ul>
+<li>16进制字符串转换为UIColor对象，16进制字符串要以#开始，例子：<code>@"#66CCFF"</code></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIColor *)getColorFromHex:(NSString *)hexColor
+</span><span class='line'>{
+</span><span class='line'>    // 转换成标准16进制数
+</span><span class='line'>    NSMutableString * colorStr = [[NSMutableString alloc]initWithString:hexColor];
+</span><span class='line'>    [colorStr replaceCharactersInRange:[colorStr rangeOfString:@"#" ] withString:@"0x"];
+</span><span class='line'>    // 十六进制字符串转成整形。
+</span><span class='line'>    long colorLong = strtoul([colorStr cStringUsingEncoding:NSUTF8StringEncoding], 0, 16);
+</span><span class='line'>    // 通过位与方法获取三色值
+</span><span class='line'>    int R = (colorLong & 0xFF0000 )&gt;&gt;16;
+</span><span class='line'>    int G = (colorLong & 0x00FF00 )&gt;&gt;8;
+</span><span class='line'>    int B =  colorLong & 0x0000FF;
+</span><span class='line'>    //string转color
+</span><span class='line'>    return [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.0];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Starting with Octopress]]></title>
