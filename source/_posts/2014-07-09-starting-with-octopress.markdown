@@ -9,6 +9,9 @@ categories:
 [Octopress](http://octopress.org/)是利用[Jekyll](https://github.com/jekyll/jekyll)博客引擎开发的一个博客系统，可以将生成的静态页面在github page上进行很好的展现。号称是hacker专属的一个博客系统(A blogging framework for hackers.)
 搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。
 [官方文档](http://octopress.org/docs/)
+
+<!--more-->
+
 --------
 ####安装Ruby
 Mac系统自带有Ruby环境，无需特别的安装即可使用，如果没有Ruby环境，可以参考[Installing Ruby With RVM](http://octopress.org/docs/setup/rvm/)进行安装  
