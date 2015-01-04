@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Cascy Jarvis]]></title>
+  <link href="http://CascyJarvis.github.io/atom.xml" rel="self"/>
+  <link href="http://CascyJarvis.github.io/"/>
+  <updated>2015-01-04T15:01:39+08:00</updated>
+  <id>http://CascyJarvis.github.io/</id>
+  <author>
+    <name><![CDATA[Cascy Jarvis]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[解决ios报错问题:libc++abi.dylib handler threw exception]]></title>
+    <link href="http://CascyJarvis.github.io/blog/2015/01/04/jie-jue-iosbao-cuo-wen-ti-libc-plus-plus-abi-dot-dylib-handler-threw-exception/"/>
+    <updated>2015-01-04T14:34:47+08:00</updated>
+    <id>http://CascyJarvis.github.io/blog/2015/01/04/jie-jue-iosbao-cuo-wen-ti-libc-plus-plus-abi-dot-dylib-handler-threw-exception</id>
+    <content type="html"><![CDATA[<p>在iOS开发时，有时候遇到<code>libc++abi.dylib handler threw exception</code>这样的异常，但是没打印出相对应的日志，实际上不是这段代码的问题。因此不知道什么地方出错了。这时候可以用捕获异常的方式来打印异常log：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@try{
+</span><span class='line'>  //Error code here.
+</span><span class='line'>    }
+</span><span class='line'>    @catch(NSException *exception) {
+</span><span class='line'>        NSLog(@"exception:%@", exception);
+</span><span class='line'>    }
+</span><span class='line'>    @finally {
+</span><span class='line'>        
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IOS实用代码整理——UIImage&amp;UIColor部分]]></title>
+    <link href="http://CascyJarvis.github.io/blog/2014/07/31/iosshi-yong-dai-ma-zheng-li-uiimage-and-uicolorbu-fen/"/>
+    <updated>2014-07-31T17:18:00+08:00</updated>
+    <id>http://CascyJarvis.github.io/blog/2014/07/31/iosshi-yong-dai-ma-zheng-li-uiimage-and-uicolorbu-fen</id>
+    <content type="html"><![CDATA[<p>整理了一些在开发中会常用到的代码，主要涉及以下内容：</p>
+
+<ul>
+<li>UIImage常用宏</li>
+<li>UIImage的本地存取</li>
+<li>UIColor取色宏</li>
+<li>UIColor16位色彩的快速设置，可以通过类似<code>@"#66ccff"</code>的十六进制代码获取相应颜色值</li>
+</ul>
+
+
+<!--more-->
+
+
+<h3>UIImage</h3>
+
+<h4>UIImage常用宏</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//读取本地图片
+</span><span class='line'>#define LOADIMAGE(file,ext) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]pathForResource:file ofType:ext]]
+</span><span class='line'>//定义UIImage对象
+</span><span class='line'>#define IMAGE(A) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:A ofType:nil]]
+</span><span class='line'>//定义UIImage对象
+</span><span class='line'>#define ImageNamed(_pointer) [UIImage imageNamed:[UIUtil imageName:_pointer]]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>UIImage的本地存取</h4>
+
+<ul>
+<li>将图片保存至本地</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void) saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
+</span><span class='line'>    if ([[extension lowercaseString] isEqualToString:@"png"]) {
+</span><span class='line'>        [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
+</span><span class='line'>    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
+</span><span class='line'>        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
+</span><span class='line'>    } else {
+</span><span class='line'>        //ALog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
+</span><span class='line'>        NSLog(@"文件后缀不认识");
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>从指定路径读取图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIImage *) loadImage:(NSString *)fileName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
+</span><span class='line'>    UIImage * result = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.%@", directoryPath, fileName, extension]];
+</span><span class='line'>    return result;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>将图片保存到默认文档路径</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    NSLog(@"保存路径:%@",documentsDirectoryPath);
+</span><span class='line'>    [self saveImage:image withFileName:imageName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>从默认文档路径读取图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIImage *) loadImage:(NSString *)fileName ofType:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    
+</span><span class='line'>    //Load Image From Directory
+</span><span class='line'>    UIImage * image = [self loadImage:fileName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>    
+</span><span class='line'>    return image;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>判断指定图片是否存在</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (BOOL)imageIsExistInDirectoryWithImageName:(NSString *)imageName type:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    
+</span><span class='line'>    //Load Image From Directory
+</span><span class='line'>    UIImage * image = [self loadImage:imageName ofType:extension inDirectory:documentsDirectoryPath];
+</span><span class='line'>    
+</span><span class='line'>    if (imageFromWeb == nil) {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }else{
+</span><span class='line'>        return YES;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>删除图片</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (BOOL)deleteImageWithImageName:(NSString *)imageName type:(NSString *)extension
+</span><span class='line'>{
+</span><span class='line'>    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+</span><span class='line'>    NSString * imagePath = [NSString stringWithFormat:@"%@/%@.%@", documentsDirectoryPath, imageName, extension];
+</span><span class='line'>    
+</span><span class='line'>    NSFileManager *fileManager = [NSFileManager defaultManager];
+</span><span class='line'>    NSError *error;
+</span><span class='line'>    BOOL success = [fileManager removeItemAtPath:imagePath error:&error];
+</span><span class='line'>    if (success) {
+</span><span class='line'>        return YES;
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h3>UIColor</h3>
+
+<h4>取色宏</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//获取RGBA颜色
+</span><span class='line'>#define RGBA(r, g, b, a)    [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+</span><span class='line'>//获取RGB颜色
+</span><span class='line'>#define RGB(r,g,b)          RGBA(r,g,b,1.0f)</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>随机取色</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (UIColor *)randomColor {
+</span><span class='line'>    static BOOL seeded = NO;
+</span><span class='line'>    if (!seeded) {
+</span><span class='line'>        seeded = YES;
+</span><span class='line'>        (time(NULL));
+</span><span class='line'>    }
+</span><span class='line'>    CGFloat red = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    CGFloat green = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    CGFloat blue = (CGFloat)random() / (CGFloat)RAND_MAX;
+</span><span class='line'>    return [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>16位颜色值</h4>
+
+<ul>
+<li>16进制字符串转换为UIColor对象，16进制字符串要以#开始，例子：<code>@"#66CCFF"</code></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (UIColor *)getColorFromHex:(NSString *)hexColor
+</span><span class='line'>{
+</span><span class='line'>    // 转换成标准16进制数
+</span><span class='line'>    NSMutableString * colorStr = [[NSMutableString alloc]initWithString:hexColor];
+</span><span class='line'>    [colorStr replaceCharactersInRange:[colorStr rangeOfString:@"#" ] withString:@"0x"];
+</span><span class='line'>    // 十六进制字符串转成整形。
+</span><span class='line'>    long colorLong = strtoul([colorStr cStringUsingEncoding:NSUTF8StringEncoding], 0, 16);
+</span><span class='line'>    // 通过位与方法获取三色值
+</span><span class='line'>    int R = (colorLong & 0xFF0000 )&gt;&gt;16;
+</span><span class='line'>    int G = (colorLong & 0x00FF00 )&gt;&gt;8;
+</span><span class='line'>    int B =  colorLong & 0x0000FF;
+</span><span class='line'>    //string转color
+</span><span class='line'>    return [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1.0];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Starting with Octopress]]></title>
+    <link href="http://CascyJarvis.github.io/blog/2014/07/09/starting-with-octopress/"/>
+    <updated>2014-07-09T12:24:38+08:00</updated>
+    <id>http://CascyJarvis.github.io/blog/2014/07/09/starting-with-octopress</id>
+    <content type="html"><![CDATA[<p><a href="http://octopress.org/">Octopress</a>是利用<a href="https://github.com/jekyll/jekyll">Jekyll</a>博客引擎开发的一个博客系统，可以将生成的静态页面在github page上进行很好的展现。号称是hacker专属的一个博客系统(A blogging framework for hackers.)
+搭建Octopress需要读者熟悉一些shell命令，并掌握git的基本操作。
+<a href="http://octopress.org/docs/">官方文档</a></p>
+
+<!--more-->
+
+
+<hr />
+
+<h4>安装Ruby</h4>
+
+<p>Mac系统自带有Ruby环境，无需特别的安装即可使用，如果没有Ruby环境，可以参考<a href="http://octopress.org/docs/setup/rvm/">Installing Ruby With RVM</a>进行安装</p>
+
+<ul>
+<li>安装RVM</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl -L https://get.rvm.io | bash -s stable --ruby</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装Ruby 1.9.3</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rvm install 1.9.3
+</span><span class='line'>rvm use 1.9.3
+</span><span class='line'>rvm rubygems latest</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成上面的操作之后，运行<code>ruby --version</code>应该可以看到ruby 1.9.3环境已经安装好了。</p>
+
+<hr />
+
+<h4>安装Octopress</h4>
+
+<ul>
+<li>将Octopress源码从GitHub上clone下来</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/imathis/octopress.git octopress    # 从github clone octopress的源代码，后面的octopress是本地存放文件夹的名称，可以自定
+</span><span class='line'>cd octopress</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>安装依赖</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install bundler
+</span><span class='line'>rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
+</span><span class='line'>bundle install</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h4>博客部署</h4>
+
+<ul>
+<li>创建一个user_name.github.com（或者user_name.github.io）的repo（必须使用此种命名方式），GitHub会需要几分钟的时间为你生成显示的页面，在部署完成后，我们就可以在user_name.github.com（或user_name.github.io）的页面上看到我们的博客信息了。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake setup_github_pages # 和github创建关联
+</span><span class='line'>git@github.com:your_username/your_username.github.com.git   # 按提示输入github URL
+</span><span class='line'>rake generate # 把你所有编辑的内容生成你的Blog静态页面
+</span><span class='line'>rake deploy   # &lt;span class="goog_qs-tidbit goog_qs-tidbit-0"&gt;如果检查没有任何问题就可以 push 你的 blog 到 github master branch&lt;/span&gt; 
+</span><span class='line'>＃ 状态检查
+</span><span class='line'>cd ~/octopress
+</span><span class='line'>git status   # 应该显示 On branch source
+</span><span class='line'>cd _deploy/  # 应该显示 On branch master
+</span><span class='line'>＃ 最后提交到source branch
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m 'first commit'
+</span><span class='line'>git push origin source # 如果这一步出错，请再次检查仓库名称是否按要求命名，同时检查Admin面板下Default Branch是否</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>最终生成的包括Octopress的所有源码以及资源代码放到了source分支下，而_deploy目录下生成的静态页面则放到了master分支下</p></blockquote>
+
+<hr />
+
+<h4>撰写博客</h4>
+
+<p>撰写博客主要会使用到以下几个命令：</p>
+
+<ul>
+<li><code>rake new_post[‘article name’]</code>生成博客模板文件，文件位置在source/_posts/目录下，修改相应文件即可</li>
+<li><code>rake generate</code>生成静态页面，页面放在_deploy目录下</li>
+<li><code>rake watch</code> 检测文件变化，实时生成新内容</li>
+<li><code>rake preview</code> 在本机生成预览页面，ctrl+c可退出预览状态，预览页面可在&lt;localhost:4000>浏览</li>
+<li><code>rake deploy</code> 将生成的静态页面部署到git服务器</li>
+</ul>
+
+
+<p>博客的页面是使用markdown语法进行书写的，网上关于markdown的教程很多，推荐使用<a href="http://mouapp.com/">Mou</a>进行博客的编写。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS7中自定义UITextField的Placeholder属性]]></title>
+    <link href="http://CascyJarvis.github.io/blog/2014/04/21/ios7zhong-zi-ding-yi-uitextfieldde-placeholdershu-xing/"/>
+    <updated>2014-04-21T18:30:38+08:00</updated>
+    <id>http://CascyJarvis.github.io/blog/2014/04/21/ios7zhong-zi-ding-yi-uitextfieldde-placeholdershu-xing</id>
+    <content type="html"><![CDATA[<p>通过重写UITextField中的<strong>drawPlaceholderInRect</strong>方法自定义Placeholder的属性，包括颜色，字体，及在UITextField中呈现的位置。 <br/>
+1.  创建继承自UITextField的类CustomTextField<br/>
+2.  在CustomTextField中重写<strong>drawPlaceholderInRect</strong>方法，代码如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)drawPlaceholderInRect:(CGRect)rect
+</span><span class='line'>{
+</span><span class='line'>    UIColor *placeholderColor = [UIColor whiteColor];//设置颜色
+</span><span class='line'>    [placeholderColor setFill];
+</span><span class='line'>    
+</span><span class='line'>    CGRect placeholderRect = CGRectMake(rect.origin.x, (rect.size.height- self.font.pointSize)/2-2, rect.size.width, self.font.pointSize+1);//设置距离
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+</span><span class='line'>    style.lineBreakMode = NSLineBreakByTruncatingTail;
+</span><span class='line'>    style.alignment = self.textAlignment;
+</span><span class='line'>    NSDictionary *attr = [NSDictionary dictionaryWithObjectsAndKeys:style,NSParagraphStyleAttributeName, self.font, NSFontAttributeName, placeholderColor, NSForegroundColorAttributeName, nil];
+</span><span class='line'>    
+</span><span class='line'>    [self.placeholder drawInRect:placeholderRect withAttributes:attr];
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+</feed>
